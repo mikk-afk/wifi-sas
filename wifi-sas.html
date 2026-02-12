@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wi-Fi SAS — Quick Guide (editable in Notepad)</title>
+<style>
+  /* Reset + base */
+  :root{
+    --bg:#0f1724; --card:#0b1220; --muted:#9aa6b2; --accent:#1fa2ff;
+    --glass: rgba(255,255,255,0.03);
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:linear-gradient(180deg,var(--bg),#071025 120%);
+    color:#e6eef6; line-height:1.45; padding:28px;
+  }
+  .wrap{max-width:1000px;margin:0 auto}
+  header{
+    display:flex; gap:18px; align-items:center; margin-bottom:20px;
+  }
+  .logo{
+    width:64px;height:64px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#0ff);
+    display:flex; justify-content:center; align-items:center; font-weight:700; color:#042;
+    box-shadow:0 6px 18px rgba(15,162,255,0.12);
+  }
+  h1{font-size:20px;margin:0}
+  p.lead{color:var(--muted); margin:6px 0 0}
+  main{display:grid; grid-template-columns: 1fr 320px; gap:20px; margin-top:18px}
+  /* left column */
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    padding:18px; border-radius:12px; box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .section + .section{margin-top:14px}
+  .muted{color:var(--muted); font-size:13px}
+  /* accordion */
+  .accordion .item{border-radius:8px; overflow:hidden; margin:8px 0}
+  .accordion button{
+    width:100%; background:var(--card); color:inherit; padding:10px 12px; border:0;
+    text-align:left; font-size:15px; cursor:pointer; display:flex; justify-content:space-between;
+    align-items:center;
+  }
+  .accordion .panel{background:var(--glass); padding:12px; color:var(--muted); display:none}
+  .accordion .panel.show{display:block}
+  /* right column */
+  aside .stat{display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed rgba(255,255,255,0.03)}
+  footer{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
+  /* small diagram */
+  .diagram{background:linear-gradient(90deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); padding:12px; border-radius:10px}
+  svg{width:100%; height:auto; display:block}
+  /* code block */
+  pre{background:#051124; padding:10px; border-radius:8px; color:#bfe9ff; overflow:auto; font-size:13px}
+  /* responsive */
+  @media (max-width:880px){
+    main{grid-template-columns:1fr; padding-bottom:40px}
+    aside{order:2}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">SAS</div>
+      <div>
+        <h1>Wi-Fi SAS — Quick Guide</h1>
+        <p class="lead">Single-file HTML you can edit with Notepad. Explains Spectrum Access System (SAS) basics, architecture and security notes.</p>
+      </div>
+    </header>
+
+    <main>
+      <!-- LEFT: content -->
+      <section>
+        <div class="card section">
+          <h2 style="margin-top:0">What is Wi-Fi SAS?</h2>
+          <p class="muted">In spectrum-sharing systems such as CBRS, a <strong>Spectrum Access System (SAS)</strong> coordinates who can use which frequencies, when, and with what power — preventing harmful interference and enabling dynamic access to shared bands.</p>
+          <p class="muted"><em>Tip:</em> This page focuses on the SAS concept and how Wi-Fi / private LTE/5G can coexist in shared bands with a SAS controller.</p>
+        </div>
+
+        <div class="card section">
+          <h3 style="margin-top:0">Core architecture (simple)</h3>
+          <div class="diagram" aria-hidden="false">
+            <!-- Minimal inline SVG diagram -->
+            <svg viewBox="0 0 900 220" role="img" aria-label="SAS architecture diagram">
+              <defs>
+                <style>
+                  .box{fill:#071a2a; stroke:#083047; stroke-width:1.5; rx:8;}
+                  .txt{fill:#dff6ff; font-size:13px; font-family:Arial, sans-serif}
+                  .line{stroke:#0fa7ff; stroke-width:1.8; stroke-linecap:round}
+                </style>
+              </defs>
+
+              <!-- Devices -->
+              <rect x="16" y="18" width="220" height="70" class="box"/>
+              <text x="26" y="40" class="txt">User devices (Wi-Fi / CBRS CPE)</text>
+              <text x="26" y="60" class="txt muted" fill="#9fb9c8">Clients / APs</text>
+
+              <!-- CBRS AP -->
+              <rect x="330" y="18" width="240" height="70" class="box"/>
+              <text x="340" y="40" class="txt">CBRS Access Point / gNodeB</text>
+              <text x="340" y="60" class="txt muted" fill="#9fb9c8">Manages local radio</text>
+
+              <!-- SAS cloud -->
+              <rect x="650" y="18" width="230" height="70" class="box"/>
+              <text x="660" y="40" class="txt">Spectrum Access System (SAS)</text>
+              <text x="660" y="60" class="txt muted" fill="#9fb9c8">Allocations & coordination</text>
+
+              <!-- lines -->
+              <line x1="236" y1="53" x2="330" y2="53" class="line"/>
+              <line x1="570" y1="53" x2="650" y2="53" class="line"/>
+
+              <!-- SAS <-> DB -->
+              <rect x="650" y="110" width="230" height="70" class="box"/>
+              <text x="660" y="132" class="txt">Regulatory DB / Incumbent info</text>
+              <text x="660" y="152" class="txt muted" fill="#9fb9c8">Protected users (navy, radar)</text>
+              <line x1="765" y1="88" x2="765" y2="110" class="line" stroke-dasharray="6,6"/>
+            </svg>
+          </div>
+          <p class="muted" style="margin-top:10px">High-level flow: Device ↔ AP ↔ SAS. SAS checks a regulatory database and decides channel/power assignments to avoid interference.</p>
+        </div>
+
+        <div class="card section">
+          <h3 style="margin-top:0">Security & operational notes</h3>
+          <ul class="muted">
+            <li><strong>Authentication:</strong> APs and SAS exchanges must authenticate (certificates or API keys) to prevent rogue allocation changes.</li>
+            <li><strong>Logging & audit:</strong> Keep allocation logs and monitor for anomalous power/channel requests.</li>
+            <li><strong>Fail-safe:</strong> Devices should default to a safe state if SAS connectivity is lost.</li>
+            <li><strong>Privacy:</strong> Only necessary operational metadata should be shared with SAS; avoid exposing user traffic.</li>
+          </ul>
+        </div>
+
+        <div class="card section">
+          <h3 style="margin-top:0">Quick config snippet (example)</h3>
+          <p class="muted">This is a conceptual example of an AP requesting a grant from a SAS (pseudo-API payload):</p>
+          <pre>
+POST /sas/grant
+Content-Type: application/json
+Authorization: Bearer &lt;device-jwt-or-api-key&gt;
+
+{
+  "device_id":"AP-1001",
+  "location": {"lat":3.1390, "lon":101.6869},
+  "antenna_height_m":6,
+  "requested_band":"3550-3650",
+  "max_eirp_dBm":30
+}
+          </pre>
+          <p class="muted">(Real systems follow the specific SAS protocol and security requirements defined by regulators / vendors.)</p>
+        </div>
+
+        <div class="card section">
+          <h3 style="margin-top:0">Learn more</h3>
+          <div class="accordion">
+            <div class="item">
+              <button onclick="togglePanel(this)">CBRS & SAS basics <span id="chev1">▾</span></button>
+              <div class="panel">
+                <p class="muted">CBRS (Citizens Broadband Radio Service) is an example band where SAS is used to dynamically coordinate access between incumbents, priority licensees, and general authorized access users.</p>
+              </div>
+            </div>
+            <div class="item">
+              <button onclick="togglePanel(this)">Security checklist <span id="chev2">▾</span></button>
+              <div class="panel">
+                <ol class="muted">
+                  <li>Mutual TLS or signed tokens between AP and SAS</li>
+                  <li>Role-based access to SAS admin consoles</li>
+                  <li>Encryption of control-plane messages</li>
+                  <li>Continuous monitoring + alerting for allocation anomalies</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT: sidebar -->
+      <aside>
+        <div class="card">
+          <h4 style="margin-top:0">At a glance</h4>
+          <div class="stat"><span class="muted">Definition</span><strong>Spectrum Access System (SAS)</strong></div>
+          <div class="stat"><span class="muted">Used with</span><strong>CBRS / shared bands</strong></div>
+          <div class="stat"><span class="muted">Important for</span><strong>Interference avoidance</strong></div>
+          <div style="padding-top:8px" class="muted">Sources: industry whitepapers and vendor docs (see below).</div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h4 style="margin-top:0">Edit this page</h4>
+          <p class="muted">Open this file in Notepad and change any text. Save and refresh your browser to see updates.</p>
+          <p class="muted" style="font-size:13px">Want a printable one-page summary? Copy the first section into a text editor and print.</p>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h4 style="margin-top:0">Quick links</h4>
+          <p class="muted">(Search online for: "Spectrum Access System", "CBRS SAS", "SAS security whitepaper")</p>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="muted">Made for editing in Notepad — no build tools required. Edit, save, refresh.</div>
+      <div style="margin-top:8px" class="muted">Sources: industry resources on SAS and spectrum sharing.</div>
+    </footer>
+  </div>
+
+<script>
+  function togglePanel(btn){
+    const panel = btn.nextElementSibling;
+    const open = panel.classList.toggle('show');
+    btn.querySelector('span') && (btn.querySelector('span').textContent = open ? '▴' : '▾');
+  }
+</script>
+</body>
+</html>
